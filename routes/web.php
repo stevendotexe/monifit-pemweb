@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/test', function () {
+Route::get('/', function () {
     return Inertia::render('landing');
 })->name('landing-page');
 
