@@ -5,7 +5,12 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('landing');
-})->name('landing-page');
+})->name('home');
+
+Route::get('bmi-test', function () {
+    return Inertia::render('bmi-test');
+})->name('bmi-test');
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard',     function () {

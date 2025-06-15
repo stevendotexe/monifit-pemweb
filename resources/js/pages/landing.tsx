@@ -1,7 +1,17 @@
 import { Head, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Heart, Activity, Apple, ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { LandingNavbar } from "@/components/layout/LandingNavbar";
+import { Scale } from 'lucide-react';
+import { MdDirectionsRun as RunningMan } from "react-icons/md";
+import { LuSalad } from "react-icons/lu";
+import { 
+    Card,
+    CardContent,
+    CardTitle,
+    CardDescription
+ } from '@/components/ui/card'
+import { FaAppleAlt, FaRunning, FaBed } from 'react-icons/fa';
 
 export default function Landing() {
     return (
@@ -12,13 +22,21 @@ export default function Landing() {
             </Head>
             
             {/* Navigation */}
-            <nav>
-                <LandingNavbar />
-            </nav>
+            <LandingNavbar />
 
             {/* Hero Section */}
-            <section className="pt-32 pb-20 pl-20 pr-20">
-                <div className="container mx-auto px-4">
+            <section className="relative pt-32 pb-20 px-15 bg-gradient-to-b from-primary/17 to-background">
+                {/* Lamp housing effect */}
+                {/* <div
+                    className="absolute left-1/2 -translate-x-1/2 -top-32 w-32 h-10 bg-gray-900/70 rounded-xl shadow-lg z-10"
+                    aria-hidden="true"
+                /> */}
+                {/* Light square effect */}
+                <div
+                    className="absolute left-1/2 -translate-x-1/2 -top-24 w-[800px] h-[300px] bg-white/40 rounded-3xl blur-3xl opacity-20 pointer-events-none z-0"
+                    aria-hidden="true"
+                />
+                <div className="container mx-auto px-4 relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-12">
                         <div className="flex-1 space-y-8">
                             <h1 className="text-5xl font-bold leading-tight">
@@ -28,7 +46,7 @@ export default function Landing() {
                                 Track your nutrition, monitor your fitness progress, and achieve your health goals with our comprehensive health tracking app.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Link href={route('register')}>
+                                <Link href={route('bmi-test')}>
                                     <Button size="lg" className="w-full sm:w-auto cursor-pointer transition-colors">
                                         Take a quick BMI Test
                                         <ArrowRight className="ml-2 h-5 w-5" />
@@ -52,13 +70,89 @@ export default function Landing() {
                 </div>
             </section>
 
-            {/* Learn More */}
-            <section className="pt-10 pl-20 pr-20">
+            {/* Features */}
+            <section className="pt-10 px-15" id="features">
                 <div className="container mx-auto px-4">
-                    
+                    <div className="flex flex-col items-center gap-10">
+                        <div className="flex-1">
+                            <h2 className="text-3xl font-bold text-center">Features</h2>
+                        </div>
+                        <div className="flex-1">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                <Card>
+                                    <CardContent>
+                                        <Scale className="h-6 w-6 card-foreground mb-4" />
+                                        <CardTitle className="text-xl">Weight Tracking</CardTitle>
+                                        <CardDescription>
+                                            Monitor and take action on your Body Mass Index to keep a healthy and balanced lifestyle.
+                                        </CardDescription>
+                                    </CardContent>
+                                </Card>
+                                <Card>
+                                    <CardContent>
+                                        <RunningMan className="h-6 w-6 card-foreground mb-4" />
+                                        <CardTitle className="text-xl">Calorie Intake Tracking</CardTitle>
+                                        <CardDescription>
+                                            Log and monitor what you consume.
+                                        </CardDescription>
+                                    </CardContent>
+                                </Card>
+                                <Card>
+                                <CardContent>
+                                        <LuSalad className="h-6 w-6 card-foreground mb-4" />
+                                        <CardTitle className="text-xl">Find Cheap & Healthy Foods</CardTitle>
+                                        <CardDescription>
+                                            Find vendors serving healthy foods at a quick pace.
+                                        </CardDescription>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
+            {/* Why Balance is Important Section */}
+            <section className="py-20 bg-background px-15">
+                <div className="container mx-auto px-4 flex flex-col items-center">
+                    <h2 className="text-3xl font-bold mb-4 text-center">Why Balance is Important</h2>
+                    <p className="text-lg text-muted-foreground max-w-2xl text-center mb-8">
+                        Achieving a balance between nutrition, physical activity, and rest is crucial for overall well-being. A balanced lifestyle helps maintain a healthy weight, reduces the risk of chronic diseases, improves mood and energy levels, and supports long-term health. MoniFit empowers you to track and manage all aspects of your health journey, making it easier to find your personal balance.
+                    </p>
+                    <div className="grid md:grid-cols-3 gap-8 w-full max-w-4xl">
+                        <div className="p-6 rounded-lg border bg-white dark:bg-card shadow-sm flex flex-col items-center">
+                            <FaAppleAlt className="text-4xl mb-2" />
+                            <h3 className="font-semibold text-lg mb-2">Nutrition</h3>
+                            <p className="text-muted-foreground text-center">Proper nutrition fuels your body and mind, supporting growth, repair, and daily activities.</p>
+                        </div>
+                        <div className="p-6 rounded-lg border bg-white dark:bg-card shadow-sm flex flex-col items-center">
+                            <FaRunning className="text-4xl mb-2" />
+                            <h3 className="font-semibold text-lg mb-2">Physical Activity</h3>
+                            <p className="text-muted-foreground text-center">Regular exercise strengthens your body, boosts mood, and helps prevent chronic diseases.</p>
+                        </div>
+                        <div className="p-6 rounded-lg border bg-white dark:bg-card shadow-sm flex flex-col items-center">
+                            <FaBed className="text-4xl mb-2" />
+                            <h3 className="font-semibold text-lg mb-2">Rest & Recovery</h3>
+                            <p className="text-muted-foreground text-center">Adequate rest and sleep are essential for recovery, mental clarity, and overall health.</p>
+                        </div>
+                    </div>
+                    {/* Supported by Research */}
+                    <div className="mt-12 w-full max-w-3xl">
+                        <h3 className="text-xl font-semibold mb-4 text-center">Supported by Research</h3>
+                        <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                            <li>
+                                <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7019938/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Nutrition and Health: Guidelines for Dietary Balance (NIH)</a>
+                            </li>
+                            <li>
+                                <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4241367/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Physical Activity and Risk of Chronic Disease (NIH)</a>
+                            </li>
+                            <li>
+                                <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2656292/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Sleep and Health: The Importance of Sleep for Well-being (NIH)</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
         </>
     );
 } 

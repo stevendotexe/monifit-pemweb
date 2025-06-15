@@ -13,7 +13,16 @@ export function LandingNavbar() {
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                 <div className="flex items-center space-x-8">
                     <Link href="/" className="text-2xl font-bold text-primary">
-                        MoniFit
+                    <img
+                        src="/images/logoreg.png"
+                        alt="MoniFit Logo"
+                        className="block dark:hidden w-20"
+                    />
+                    <img
+                        src="/images/logowhite.png"
+                        alt="MoniFit Logo"
+                        className="hidden dark:block w-20"
+                    />
                     </Link>
                     <NavigationMenu>
                         <NavigationMenuList className="hidden md:flex space-x-6">
@@ -25,14 +34,6 @@ export function LandingNavbar() {
                                     Features
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
-                            <NavigationMenuItem>
-                                <NavigationMenuLink
-                                    href="#testimonials"
-                                    className="muted hover:bg-primary hover:text-primary-foreground px-3 py-2 rounded-md transition-colors"
-                                >
-                                    Testimonials
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
                 </div>
@@ -41,7 +42,7 @@ export function LandingNavbar() {
                         Log in
                     </Link>
                     <Link href={route('register')}>
-                        <Button>Get Started</Button>
+                        <Button className="cursor-pointer">Get Started</Button>
                     </Link>
                 </div>
             </div>
