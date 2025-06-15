@@ -154,6 +154,33 @@ export default function Landing() {
                     </div>
                 </div>
             </section>
+
+            {/* Logo Philosophy Section */}
+            <section className="py-16 bg-white dark:bg-background px-15 border-t">
+                <div className="container mx-auto px-4 flex flex-col items-center">
+                    <h2 className="text-2xl font-bold mb-4 text-center">Logo Philosophy</h2>
+                    <img src="/images/logowhite.png" alt="MoniFit Logo" className="mx-auto mb-4 w-32 h-auto" />
+                    <p className="text-lg text-muted-foreground max-w-2xl text-center mb-4">
+                        Our logo is a golden ratio, with an orange above the "i" in MoniFit symbolizing health, vitality, and a fresh start. The circle represents wholeness and balance, which are at the core of our mission.
+                    </p>
+                </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="w-full py-8 bg-gray-100 dark:bg-gray-900 text-center text-gray-500 dark:text-gray-400 border-t mt-8">
+                <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex flex-col items-center md:flex-row md:items-center gap-2 md:gap-6">
+                        <img src="/images/logowhite.png" alt="MoniFit Logo" className="w-16 h-auto mb-2 md:mb-0" />
+                        <span className="font-bold text-lg">MoniFit</span>
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-2 md:gap-6 items-center">
+                        <Link href="/bmi-test" className="hover:underline">BMI Test</Link>
+                        <Link href="/login" className="hover:underline">Login</Link>
+                        <Link href="/register" className="hover:underline">Register</Link>
+                    </div>
+                    <div className="text-xs mt-2 md:mt-0">&copy; {new Date().getFullYear()} MoniFit. All rights reserved.</div>
+                </div>
+            </footer>
         </>
     );
 } 

@@ -50,20 +50,49 @@ class FoodController extends Controller
         return inertia('foods/create');
     }
 
+    public function show(Request $request, $id)
+    {
+        $food = $request->user()->foods()->findOrFail($id);
+        return inertia('foods/show', ['food' => $food]);
+    }
+
     public function store(Request $request)
     {
+        \Log::info('Food store request data:', $request->all());
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'calories' => 'required|integer|min:0',
+            'calories' => 'required|numeric|min:0',
             'protein_g' => 'required|numeric|min:0',
             'carbs_g' => 'required|numeric|min:0',
             'fat_g' => 'required|numeric|min:0',
             'consumed_at' => 'required|date',
+            'description' => 'nullable|string',
         ]);
 
-        $request->user()->foods()->create($validated);
+        \Log::info('Validated data:', $validated);
 
-        return redirect()->route('foods.index')->with('success', 'Food item created successfully.');
+        try {
+            $food = $request->user()->foods()->create($validated);
+            \Log::info('Food created:', $food->toArray());
+
+            if ($request->wantsJson()) {
+                return response()->json(['success' => true, 'food' => $food]);
+            }
+
+            return redirect()->route('foods.index')->with('success', 'Food item created successfully.');
+        } catch (\Exception $e) {
+            \Log::error('Error creating food:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Failed to create food item'], 500);
+            }
+
+            return redirect()->back()->with('error', 'Failed to create food item');
+        }
     }
 
     public function edit(Request $request, $id)
@@ -76,11 +105,12 @@ class FoodController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'calories' => 'required|integer|min:0',
+            'calories' => 'required|numeric|min:0',
             'protein_g' => 'required|numeric|min:0',
             'carbs_g' => 'required|numeric|min:0',
             'fat_g' => 'required|numeric|min:0',
             'consumed_at' => 'required|date',
+            'description' => 'nullable|string',
         ]);
 
         $food = $request->user()->foods()->findOrFail($id);
