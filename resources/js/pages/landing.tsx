@@ -1,6 +1,18 @@
 import { Head, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Heart, Activity, Apple, ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { LandingNavbar } from "@/components/layout/LandingNavbar";
+import { Scale } from 'lucide-react';
+import { MdDirectionsRun as RunningMan } from "react-icons/md";
+import { LuSalad } from "react-icons/lu";
+
+import { 
+    Card,
+    CardContent,
+    CardTitle,
+    CardDescription
+ } from '@/components/ui/card'
+import { FaAppleAlt, FaRunning, FaBed } from 'react-icons/fa';
 
 export default function Landing() {
     return (
@@ -11,154 +23,137 @@ export default function Landing() {
             </Head>
             
             {/* Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b">
-                <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                    <div className="flex items-center space-x-8">
-                        <Link href="/" className="text-2xl font-bold text-primary">
-                            MoniFit
-                        </Link>
-                        <div className="hidden md:flex space-x-6">
-                            <Link href="#features" className="text-gray-600 hover:text-primary">Features</Link>
-                            <Link href="#pricing" className="text-gray-600 hover:text-primary">Pricing</Link>
-                            <Link href="#testimonials" className="text-gray-600 hover:text-primary">Testimonials</Link>
-                        </div>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                        <Link href={route('login')} className="text-gray-600 hover:text-primary">
-                            Log in
-                        </Link>
-                        <Link href={route('register')}>
-                            <Button>Get Started</Button>
-                        </Link>
-                    </div>
-                </div>
-            </nav>
+            <LandingNavbar />
 
             {/* Hero Section */}
-            <section className="pt-32 pb-20 bg-gradient-to-b from-white to-gray-50">
-                <div className="container mx-auto px-4">
+            <section className="relative pt-32 pb-20 px-15 bg-gradient-to-b from-primary/17 to-background">
+                {/* Lamp housing effect */}
+                {/* <div
+                    className="absolute left-1/2 -translate-x-1/2 -top-32 w-32 h-10 bg-gray-900/70 rounded-xl shadow-lg z-10"
+                    aria-hidden="true"
+                /> */}
+                {/* Light square effect */}
+                <div
+                    className="absolute left-1/2 -translate-x-1/2 -top-24 w-[800px] h-[300px] bg-white/40 rounded-3xl blur-3xl opacity-20 pointer-events-none z-0"
+                    aria-hidden="true"
+                />
+                <div className="container mx-auto px-4 relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-12">
                         <div className="flex-1 space-y-8">
                             <h1 className="text-5xl font-bold leading-tight">
                                 Transform Your Health Journey with <span className="text-primary">MoniFit</span>
                             </h1>
-                            <p className="text-xl text-gray-600">
+                            <p className="text-xl muted">
                                 Track your nutrition, monitor your fitness progress, and achieve your health goals with our comprehensive health tracking app.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Link href={route('register')}>
-                                    <Button size="lg" className="w-full sm:w-auto">
-                                        Start Free Trial
+                                <Link href={route('bmi-test')}>
+                                    <Button size="lg" className="w-full sm:w-auto cursor-pointer transition-colors">
+                                        Take a quick BMI Test
                                         <ArrowRight className="ml-2 h-5 w-5" />
                                     </Button>
                                 </Link>
-                                <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                                <Button size="lg" variant="outline" className="w-full sm:w-auto cursor-pointer transition-colors">
                                     Learn More
                                 </Button>
                             </div>
                         </div>
                         <div className="flex-1">
-                            <img 
-                                src="/images/hero-app.png" 
-                                alt="MoniFit App Preview" 
-                                className="w-full max-w-lg mx-auto rounded-lg shadow-2xl"
-                            />
+                            <div className="w-full max-w-lg mx-auto aspect-[4/3] rounded-lg shadow-2xl overflow-hidden">
+                                <img 
+                                    src="https://images.unsplash.com/photo-1642635055753-3eec6c0b2a6e?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                    alt="Person working out with fitness app"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Features Section */}
-            <section id="features" className="py-20 bg-white">
+            {/* Features */}
+            <section className="pt-10 px-15" id="features">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold mb-4">Everything You Need to Stay Healthy</h2>
-                        <p className="text-gray-600 max-w-2xl mx-auto">
-                            Comprehensive tools and features to help you achieve your health and fitness goals
-                        </p>
-                    </div>
-                    <div className="grid md:grid-cols-3 gap-8">
-                        <div className="p-6 rounded-lg border bg-white hover:shadow-lg transition-shadow">
-                            <Heart className="h-12 w-12 text-primary mb-4" />
-                            <h3 className="text-xl font-semibold mb-2">Nutrition Tracking</h3>
-                            <p className="text-gray-600">
-                                Track your daily meals, calories, and nutrients with our easy-to-use food diary.
-                            </p>
+                    <div className="flex flex-col items-center gap-10">
+                        <div className="flex-1">
+                            <h2 className="text-3xl font-bold text-center">Features</h2>
                         </div>
-                        <div className="p-6 rounded-lg border bg-white hover:shadow-lg transition-shadow">
-                            <Activity className="h-12 w-12 text-primary mb-4" />
-                            <h3 className="text-xl font-semibold mb-2">Fitness Monitoring</h3>
-                            <p className="text-gray-600">
-                                Log your workouts, track your progress, and stay motivated with personalized goals.
-                            </p>
-                        </div>
-                        <div className="p-6 rounded-lg border bg-white hover:shadow-lg transition-shadow">
-                            <Apple className="h-12 w-12 text-primary mb-4" />
-                            <h3 className="text-xl font-semibold mb-2">Health Insights</h3>
-                            <p className="text-gray-600">
-                                Get detailed analytics and insights about your health journey and progress.
-                            </p>
+                        <div className="flex-1">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                <Card>
+                                    <CardContent>
+                                        <Scale className="h-6 w-6 card-foreground mb-4" />
+                                        <CardTitle className="text-xl">Weight Tracking</CardTitle>
+                                        <CardDescription>
+                                            Monitor and take action on your Body Mass Index to keep a healthy and balanced lifestyle.
+                                        </CardDescription>
+                                    </CardContent>
+                                </Card>
+                                <Card>
+                                    <CardContent>
+                                        <RunningMan className="h-6 w-6 card-foreground mb-4" />
+                                        <CardTitle className="text-xl">Calorie Intake Tracking</CardTitle>
+                                        <CardDescription>
+                                            Log and monitor what you consume.
+                                        </CardDescription>
+                                    </CardContent>
+                                </Card>
+                                <Card>
+                                <CardContent>
+                                        <LuSalad className="h-6 w-6 card-foreground mb-4" />
+                                        <CardTitle className="text-xl">Find Cheap & Healthy Foods</CardTitle>
+                                        <CardDescription>
+                                            Find vendors serving healthy foods at a quick pace.
+                                        </CardDescription>
+                                    </CardContent>
+                                </Card>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="py-20 bg-primary text-white">
-                <div className="container mx-auto px-4 text-center">
-                    <h2 className="text-3xl font-bold mb-4">Ready to Start Your Health Journey?</h2>
-                    <p className="text-xl mb-8 max-w-2xl mx-auto">
-                        Join thousands of users who have transformed their lives with MoniFit
+            {/* Why Balance is Important Section */}
+            <section className="py-20 bg-background px-15">
+                <div className="container mx-auto px-4 flex flex-col items-center">
+                    <h2 className="text-3xl font-bold mb-4 text-center">Why Balance is Important</h2>
+                    <p className="text-lg text-muted-foreground max-w-2xl text-center mb-8">
+                        Achieving a balance between nutrition, physical activity, and rest is crucial for overall well-being. A balanced lifestyle helps maintain a healthy weight, reduces the risk of chronic diseases, improves mood and energy levels, and supports long-term health. MoniFit empowers you to track and manage all aspects of your health journey, making it easier to find your personal balance.
                     </p>
-                    <Link href={route('register')}>
-                        <Button size="lg" variant="secondary" className="w-full sm:w-auto">
-                            Get Started Now
-                            <ChevronRight className="ml-2 h-5 w-5" />
-                        </Button>
-                    </Link>
+                    <div className="grid md:grid-cols-3 gap-8 w-full max-w-4xl">
+                        <div className="p-6 rounded-lg border bg-white dark:bg-card shadow-sm flex flex-col items-center">
+                            <FaAppleAlt className="text-4xl mb-2" />
+                            <h3 className="font-semibold text-lg mb-2">Nutrition</h3>
+                            <p className="text-muted-foreground text-center">Proper nutrition fuels your body and mind, supporting growth, repair, and daily activities.</p>
+                        </div>
+                        <div className="p-6 rounded-lg border bg-white dark:bg-card shadow-sm flex flex-col items-center">
+                            <FaRunning className="text-4xl mb-2" />
+                            <h3 className="font-semibold text-lg mb-2">Physical Activity</h3>
+                            <p className="text-muted-foreground text-center">Regular exercise strengthens your body, boosts mood, and helps prevent chronic diseases.</p>
+                        </div>
+                        <div className="p-6 rounded-lg border bg-white dark:bg-card shadow-sm flex flex-col items-center">
+                            <FaBed className="text-4xl mb-2" />
+                            <h3 className="font-semibold text-lg mb-2">Rest & Recovery</h3>
+                            <p className="text-muted-foreground text-center">Adequate rest and sleep are essential for recovery, mental clarity, and overall health.</p>
+                        </div>
+                    </div>
+                    {/* Supported by Research */}
+                    <div className="mt-12 w-full max-w-3xl">
+                        <h3 className="text-xl font-semibold mb-4 text-center">Supported by Research</h3>
+                        <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                            <li>
+                                <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7019938/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Nutrition and Health: Guidelines for Dietary Balance (NIH)</a>
+                            </li>
+                            <li>
+                                <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4241367/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Physical Activity and Risk of Chronic Disease (NIH)</a>
+                            </li>
+                            <li>
+                                <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2656292/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Sleep and Health: The Importance of Sleep for Well-being (NIH)</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </section>
-
-            {/* Footer */}
-            <footer className="bg-gray-900 text-gray-400 py-12">
-                <div className="container mx-auto px-4">
-                    <div className="grid md:grid-cols-4 gap-8">
-                        <div>
-                            <h3 className="text-white text-lg font-semibold mb-4">MoniFit</h3>
-                            <p className="text-sm">
-                                Your personal health and fitness companion for a better lifestyle.
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="text-white text-sm font-semibold mb-4">Product</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><Link href="#features" className="hover:text-white">Features</Link></li>
-                                <li><Link href="#pricing" className="hover:text-white">Pricing</Link></li>
-                                <li><Link href="#" className="hover:text-white">Download</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="text-white text-sm font-semibold mb-4">Company</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><Link href="#" className="hover:text-white">About</Link></li>
-                                <li><Link href="#" className="hover:text-white">Blog</Link></li>
-                                <li><Link href="#" className="hover:text-white">Careers</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="text-white text-sm font-semibold mb-4">Legal</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><Link href="#" className="hover:text-white">Privacy</Link></li>
-                                <li><Link href="#" className="hover:text-white">Terms</Link></li>
-                                <li><Link href="#" className="hover:text-white">Cookie Policy</Link></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="border-t border-gray-800 mt-12 pt-8 text-sm text-center">
-                        © {new Date().getFullYear()} MoniFit. All rights reserved.
-                    </div>
-                </div>
-            </footer>
         </>
     );
 } 
