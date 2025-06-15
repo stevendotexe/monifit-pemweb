@@ -5,6 +5,7 @@ import { LandingNavbar } from "@/components/layout/LandingNavbar";
 import { Scale } from 'lucide-react';
 import { MdDirectionsRun as RunningMan } from "react-icons/md";
 import { LuSalad } from "react-icons/lu";
+
 import { 
     Card,
     CardContent,

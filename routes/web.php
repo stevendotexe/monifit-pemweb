@@ -11,11 +11,19 @@ Route::get('bmi-test', function () {
     return Inertia::render('bmi-test');
 })->name('bmi-test');
 
+Route::get('subscribe', function () {
+    return Inertia::render('subscribe');
+})->name('subscribe');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard',     function () {
+    Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+    Route::get('onboarding', function () {
+        return Inertia::render('onboarding');
+    })->name('onboarding');
+    Route::post('onboarding', [\App\Http\Controllers\OnboardingController::class, 'store']);
+    Route::get('onboarding', [\App\Http\Controllers\OnboardingController::class, 'show'])->name('onboarding');
 });
 
 require __DIR__.'/settings.php';

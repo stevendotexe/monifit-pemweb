@@ -46,6 +46,16 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        // Redirect to onboarding if any onboarding fields are empty
+        if (
+            empty($user->gender) ||
+            empty($user->birth_date) ||
+            empty($user->weight_kg) ||
+            empty($user->height_cm)
+        ) {
+            return redirect()->route('onboarding');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 }
