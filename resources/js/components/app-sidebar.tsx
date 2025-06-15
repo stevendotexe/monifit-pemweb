@@ -37,20 +37,9 @@ const mainNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-<<<<<<< HEAD
-        title: 'Repository',
-        href: 'https://github.com/stevendotexe/monifit-pemweb',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-=======
         title: 'Subscribe Today',
         href: route('subscribe'),
         icon: DollarSign,
->>>>>>> e00a381006c55203a40e6fda524906b0dd53c347
     },
 ];
 
