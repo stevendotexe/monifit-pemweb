@@ -47,7 +47,7 @@ export default function CreateFood() {
         <AppLayout>
             <Head title="Add Food" />
 
-            <Card>
+            <Card className='m-4 bg-sidebar'>
                 <CardHeader>
                     <Heading title="Log a New Food" description="Enter the details of the food you consumed." />
                 </CardHeader>

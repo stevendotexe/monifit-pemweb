@@ -51,7 +51,7 @@ export default function Index({ foodsByDay }: { foodsByDay: FoodDayGroup[] }) {
 
                 <div className="flex flex-row items-center justify-between">
                     <Heading title="My Food Log" description="A list of all the food you have consumed, grouped by day." />
-                    <Link href={route('foods.create')}>
+                    <Link href={route('foods.pre-added')}>
                         <Button>Add New Food</Button>
                     </Link>
                 </div>
@@ -90,7 +90,7 @@ export default function Index({ foodsByDay }: { foodsByDay: FoodDayGroup[] }) {
                                 </Card>
 
                                 {/* Food Table for the day */}
-                                <Card>
+                                <Card className='bg-sidebar p-4'>
                                     <Table>
                                         <TableHeader>
                                             <TableRow>

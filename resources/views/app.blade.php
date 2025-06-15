@@ -6,6 +6,8 @@
 
         <title inertia>{{ config('app.name', 'MoniFit') }}</title>
 
+        <link rel="icon" type="image/png" href="/images/logowhite.png">
+
         @routes
         @viteReactRefresh
         @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
