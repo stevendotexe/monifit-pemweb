@@ -1,7 +1,8 @@
-import { type BreadcrumbItem, type SharedData } from '@/types';
+import { type BreadcrumbItem, type SharedData, type User } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
+import { parseISO, format } from 'date-fns';
 
 import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
@@ -11,6 +12,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DatePicker } from '@/components/ui/date-picker';
+
+type PageProps<T = unknown> = {
+    user: User;
+    bmr: number | null;
+} & T;
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -22,15 +30,32 @@ const breadcrumbs: BreadcrumbItem[] = [
 type ProfileForm = {
     name: string;
     email: string;
+    gender: string;
+    birth_date: Date | undefined; // Updated type for DatePicker
+    weight_kg: string;
+    height_cm: string;
 };
 
-export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
+export default function Profile({ user, bmr }: PageProps<{ user: User; bmr: number | null }>) {
     const { auth } = usePage<SharedData>().props;
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
+    const { data, setData, patch, errors, processing, recentlySuccessful, transform } = useForm<ProfileForm>({
         name: auth.user.name,
         email: auth.user.email,
+        gender: auth.user.gender || '',
+        birth_date: auth.user.birth_date ? parseISO(auth.user.birth_date) : undefined, // Convert string to Date object
+        weight_kg: String(auth.user.weight_kg || ''),
+        height_cm: String(auth.user.height_cm || ''),
     });
+
+    // Transform date back to string before submitting to backend
+    transform((data) => ({
+        ...data,
+        birth_date: data.birth_date ? format(data.birth_date, 'yyyy-MM-dd') : null,
+    }));
+
+    const mustVerifyEmail = !!auth.user.must_verify_email;
+    const status = usePage().props.status as string | undefined;
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -48,26 +73,34 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                 <div className="space-y-6">
                     <HeadingSmall title="Profile information" description="Update your name and email address" />
 
+                    {bmr ? (
+                        <div className="mb-6 rounded-lg border bg-primary/10 p-4 text-center">
+                            <p className="text-sm text-muted-foreground">Estimated Daily Calorie Needs (BMR)</p>
+                            <p className="text-3xl font-bold text-primary">{Math.round(bmr)} kcal</p>
+                        </div>
+                    ) : (
+                        <div className="mb-6 rounded-lg border bg-muted p-4 text-center">
+                            <p className="text-sm text-muted-foreground">
+                                Complete your personal data (gender, birth date, weight, and height) to see your estimated daily calorie needs.
+                            </p>
+                        </div>
+                    )}
+
                     <form onSubmit={submit} className="space-y-6">
                         <div className="grid gap-2">
                             <Label htmlFor="name">Name</Label>
-
                             <Input
                                 id="name"
                                 className="mt-1 block w-full"
                                 value={data.name}
                                 onChange={(e) => setData('name', e.target.value)}
                                 required
-                                autoComplete="name"
-                                placeholder="Full name"
                             />
-
                             <InputError className="mt-2" message={errors.name} />
                         </div>
 
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email address</Label>
-
                             <Input
                                 id="email"
                                 type="email"
@@ -75,10 +108,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
                                 required
-                                autoComplete="username"
-                                placeholder="Email address"
                             />
-
                             <InputError className="mt-2" message={errors.email} />
                         </div>
 
@@ -95,7 +125,6 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                         Click here to resend the verification email.
                                     </Link>
                                 </p>
-
                                 {status === 'verification-link-sent' && (
                                     <div className="mt-2 text-sm font-medium text-green-600">
                                         A new verification link has been sent to your email address.
@@ -104,9 +133,55 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                             </div>
                         )}
 
+                        <div>
+                            <Label htmlFor="gender">Gender</Label>
+                            <Select value={data.gender} onValueChange={(value) => setData('gender', value)}>
+                                <SelectTrigger id="gender" className="w-full mt-1">
+                                    <SelectValue placeholder="Select a gender" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="male">Male</SelectItem>
+                                    <SelectItem value="female">Female</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <InputError message={errors.gender} className="mt-2" />
+                        </div>
+
+                        <div>
+                            <Label>Birth Date</Label>
+                            <DatePicker
+                                date={data.birth_date}
+                                setDate={(date) => setData('birth_date', date)}
+                            />
+                            <InputError message={errors.birth_date} className="mt-2" />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="weight_kg">Weight (kg)</Label>
+                            <Input
+                                id="weight_kg"
+                                type="number"
+                                className="mt-1 block w-full"
+                                value={data.weight_kg || ''}
+                                onChange={(e) => setData('weight_kg', e.target.value)}
+                            />
+                            <InputError message={errors.weight_kg} className="mt-2" />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="height_cm">Height (cm)</Label>
+                            <Input
+                                id="height_cm"
+                                type="number"
+                                className="mt-1 block w-full"
+                                value={data.height_cm || ''}
+                                onChange={(e) => setData('height_cm', e.target.value)}
+                            />
+                            <InputError message={errors.height_cm} className="mt-2" />
+                        </div>
+
                         <div className="flex items-center gap-4">
                             <Button disabled={processing}>Save</Button>
-
                             <Transition
                                 show={recentlySuccessful}
                                 enter="transition ease-in-out"

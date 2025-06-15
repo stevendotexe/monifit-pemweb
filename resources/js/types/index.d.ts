@@ -1,43 +1,81 @@
-import { LucideIcon } from 'lucide-react';
-import type { Config } from 'ziggy-js';
-
-export interface Auth {
-    user: User;
-}
-
-export interface BreadcrumbItem {
-    title: string;
-    href: string;
-}
-
-export interface NavGroup {
-    title: string;
-    items: NavItem[];
-}
-
-export interface NavItem {
-    title: string;
-    href: string;
-    icon?: LucideIcon | null;
-    isActive?: boolean;
-}
-
-export interface SharedData {
-    name: string;
-    quote: { message: string; author: string };
-    auth: Auth;
-    ziggy: Config & { location: string };
-    sidebarOpen: boolean;
-    [key: string]: unknown;
-}
-
-export interface User {
+export type User = {
     id: number;
     name: string;
     email: string;
-    avatar?: string;
-    email_verified_at: string | null;
-    created_at: string;
-    updated_at: string;
-    [key: string]: unknown; // This allows for additional properties...
-}
+    email_verified_at: string;
+    gender: string | null;
+    birth_date: string | null;
+    weight_kg: number | null;
+    height_cm: number | null;
+    must_verify_email?: boolean;
+};
+
+export type Food = {
+    id: number;
+    name: string;
+    calories: number;
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+    consumed_at: string;
+};
+
+export type PaginatedData<T> = {
+    data: T[];
+    links: {
+        first: string;
+        last: string;
+        prev: string | null;
+        next: string | null;
+    };
+    meta: {
+        current_page: number;
+        from: number;
+        last_page: number;
+        links: {
+            url: string | null;
+            label: string;
+            active: boolean;
+        }[];
+        path: string;
+        per_page: number;
+        to: number;
+        total: number;
+    };
+};
+
+export type SharedData = {
+    auth: {
+        user: User;
+    };
+    ziggy: unknown;
+    flash: {
+        success?: string;
+        error?: string;
+    };
+};
+
+export type BreadcrumbItem = {
+    title: string;
+    href: string;
+};
+
+export type NavItem = {
+    title: string;
+    href: string;
+    icon: React.ElementType;
+};
+
+export type DailyTotals = {
+    calories: number;
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+};
+
+export type FoodDayGroup = {
+    date: string;
+    formatted_date: string;
+    foods: Food[];
+    totals: DailyTotals;
+};

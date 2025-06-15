@@ -3,14 +3,16 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/test', function () {
+Route::get('/', function () {
     return Inertia::render('landing');
-})->name('landing-page');
+})->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard',     function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+    
+    Route::resource('foods', App\Http\Controllers\FoodController::class);
 });
 
 require __DIR__.'/settings.php';
