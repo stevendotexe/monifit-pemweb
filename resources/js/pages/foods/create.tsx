@@ -33,7 +33,7 @@ export default function CreateFood() {
 
         // Rumus: 1g Protein = 4 cal, 1g Carbs = 4 cal, 1g Fat = 9 cal
         const calculatedCalories = (protein * 4) + (carbs * 4) + (fat * 9);
-        
+
         setData('calories', String(Math.round(calculatedCalories)));
 
     }, [data.protein_g, data.carbs_g, data.fat_g]);

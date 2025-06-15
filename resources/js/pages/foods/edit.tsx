@@ -74,7 +74,7 @@ export default function EditFood({ food }: { food: Food }) {
                             </div>
                             <div>
                                 <Label htmlFor="calories">Calories (kcal)</Label>
-                                <Input id="calories" type="number" value={data.calories} readOnly className="bg-muted" />
+                                <Input id="calories" type="number" value={data.calories} className="bg-muted" />
                                 <p className="text-xs text-muted-foreground mt-1">Calories are calculated automatically.</p>
                                 <InputError message={errors.calories} className="mt-2" />
                             </div>
