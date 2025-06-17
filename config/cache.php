@@ -40,10 +40,11 @@ return [
 
         'database' => [
             'driver' => 'database',
-            'connection' => env('DB_CACHE_CONNECTION'),
-            'table' => env('DB_CACHE_TABLE', 'cache'),
-            'lock_connection' => env('DB_CACHE_LOCK_CONNECTION'),
-            'lock_table' => env('DB_CACHE_LOCK_TABLE'),
+            'connection' => 'database',
+            'table' => 'cache',
+            'lock_connection' => 'database',
+            'lock_table' => 'cache_locks',
+            'prefix' => env('CACHE_PREFIX', 'monifit_cache_'),
         ],
 
         'file' => [
