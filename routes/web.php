@@ -29,21 +29,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $user = Auth::user();
         $today = Carbon::today();
 
-        // Get food totals
-        $totals = Food::where('user_id', $user->id)
-            ->whereDate('consumed_at', $today)
-            ->selectRaw('
-                COALESCE(SUM(calories),0) as calories,
-                COALESCE(SUM(protein_g),0) as protein_g,
-                COALESCE(SUM(carbs_g),0) as carbs_g,
-                COALESCE(SUM(fat_g),0) as fat_g
-            ')
+        // Get today's totals from daily_totals table
+        $totals = DailyTotal::where('user_id', $user->id)
+            ->whereDate('date', $today)
             ->first();
 
-        // Get water total
-        $waterTotal = DailyTotal::where('user_id', $user->id)
-            ->whereDate('date', $today)
-            ->value('water_ml') ?? 0;
+        // If no totals exist for today, create them with zeros
+        if (!$totals) {
+            $totals = DailyTotal::create([
+                'user_id' => $user->id,
+                'date' => $today,
+                'calories' => 0,
+                'protein_g' => 0,
+                'carbs_g' => 0,
+                'fat_g' => 0,
+                'water_ml' => 0
+            ]);
+        }
 
         $todayFoods = Food::where('user_id', $user->id)
             ->whereDate('consumed_at', $today)
@@ -51,12 +53,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->get();
 
         return Inertia::render('dashboard', [
+            'auth' => [
+                'user' => $user
+            ],
             'todayTotals' => [
                 'calories' => (int) $totals->calories,
                 'protein_g' => (float) $totals->protein_g,
                 'carbs_g' => (float) $totals->carbs_g,
                 'fat_g' => (float) $totals->fat_g,
-                'water_ml' => (int) $waterTotal,
+                'water_ml' => (int) $totals->water_ml,
             ],
             'todayFoods' => $todayFoods
         ]);

@@ -17,7 +17,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-type User = { name: string; gender: string; birth_date: string; weight_kg: number; height_cm: number; };
+type User = { 
+    name: string; 
+    gender: string; 
+    birth_date: string; 
+    weight_kg: number; 
+    height_cm: number; 
+};
+
 type TodayTotals = {
     calories: number;
     protein_g: number;
@@ -25,6 +32,7 @@ type TodayTotals = {
     fat_g: number;
     water_ml: number;
 };
+
 type Food = {
     id: number;
     name: string;
@@ -34,10 +42,11 @@ type Food = {
     fat_g: number;
     consumed_at: string;
 };
+
 type PageProps = { auth: { user: User }, todayTotals: TodayTotals, todayFoods: Food[] };
 
-const GLASS_ML = 250; // Standard glass size in ml
-const BOTTLE_ML = 500; // Standard water bottle size in ml
+const GLASS_ML = 250; // Standard glass size
+const BOTTLE_ML = 500; // Standard water bottle size
 
 function calculateAge(birthDate: string) {
     const today = new Date();
@@ -50,6 +59,8 @@ function calculateAge(birthDate: string) {
     return age;
 }
 
+// Mifflin-St Jeor formula 
+// https://reference.medscape.com/calculator/846/mifflin-st-jeor-equation
 function calculateBMR(user: User) {
     const age = calculateAge(user.birth_date);
     if (user.gender === 'male') {
@@ -59,20 +70,21 @@ function calculateBMR(user: User) {
     }
 }
 
+// Get daily burnable calories
 function calculateTDEE(bmr: number) {
-    // Assume sedentary for now (1.2)
+    // Assume user is sedentary
     return Math.round(bmr * 1.2);
 }
 
 function getMacros(tdee: number) {
-    // Standard: 20% protein, 30% fat, 50% carbs
+    // 20% protein, 30% fat, 50% carbs
     const proteinCals = tdee * 0.20;
     const fatCals = tdee * 0.30;
     const carbCals = tdee * 0.50;
     return {
-        protein: Math.round(proteinCals / 4), // grams
-        fat: Math.round(fatCals / 9), // grams
-        carbs: Math.round(carbCals / 4), // grams
+        protein_g: Math.round(proteinCals / 4), 
+        fat_g: Math.round(fatCals / 9), 
+        carbs_g: Math.round(carbCals / 4)
     };
 }
 
@@ -83,7 +95,7 @@ function calculateBMI(weight_kg: number, height_cm: number) {
 
 function calculateHydrationNeeds(weight_kg: number, height_cm: number) {
     // Basic calculation: 30-35ml per kg of body weight
-    // We'll use 33ml as a middle ground
+    // https://www.brita.in/experience-brita/personal-hydration-needs
     const baseHydration = weight_kg * 33;
     
     // Adjust based on BMI
@@ -91,10 +103,10 @@ function calculateHydrationNeeds(weight_kg: number, height_cm: number) {
     let adjustment = 1.0;
     
     if (bmi < 18.5) {
-        // Underweight - slightly increase hydration
+        // If user is underweight - slightly increase hydration
         adjustment = 1.1;
     } else if (bmi > 25) {
-        // Overweight - slightly decrease hydration
+        // If user is Overweight - slightly decrease hydration
         adjustment = 0.9;
     }
     
@@ -102,7 +114,7 @@ function calculateHydrationNeeds(weight_kg: number, height_cm: number) {
 }
 
 export default function Dashboard() {
-    const { auth, todayTotals, todayFoods } = usePage<PageProps>().props;
+    const {auth, todayTotals, todayFoods } = usePage<PageProps>().props;
     const [waterAmount, setWaterAmount] = useState('');
     const [isWaterOpen, setIsWaterOpen] = useState(false);
     const [weightAmount, setWeightAmount] = useState('');
@@ -110,7 +122,6 @@ export default function Dashboard() {
     const user = auth.user;
     const bmr = calculateBMR(user);
     const tdee = calculateTDEE(bmr);
-    const macros = getMacros(tdee);
     const caloriesConsumed = todayTotals.calories;
     const proteinConsumed = todayTotals.protein_g;
     const fatConsumed = todayTotals.fat_g;
@@ -165,12 +176,13 @@ export default function Dashboard() {
                 <div className="relative min-h-[20vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
                     <div className="flex flex-col justify-center h-full pl-8">
                         <h2 className="text-5xl font-bold">
+                            {/* Greeter Function */}
                             {(() => {
                                 const hour = new Date().getHours();
                                 if (hour >= 5 && hour < 12) return 'Good Morning';
                                 if (hour >= 12 && hour < 17) return 'Good Afternoon';
                                 if (hour >= 17 && hour < 21) return 'Good Evening';
-                                return 'Hello';
+                                return 'Good Evening';
                             })()}, {user.name}
                         </h2>
                     </div>
@@ -300,7 +312,7 @@ export default function Dashboard() {
                                 <div className="mt-2 text-sm text-muted-foreground">out of {hydrationNeeds}ml needed today</div>
                                 <Dialog open={isWaterOpen} onOpenChange={setIsWaterOpen}>
                                     <DialogTrigger asChild>
-                                        <Button className="mt-4" variant="outline">
+                                        <Button className="mt-4 cursor-pointer" variant="outline">
                                             <FaGlassWater className="mr-2 h-4 w-4" />
                                             Log Water
                                         </Button>
@@ -366,10 +378,10 @@ export default function Dashboard() {
                                 <div className="flex-1 pl-2">
                                     <div className="flex items-center justify-between p-2">
                                         <span className="text-sm font-large">Protein</span>
-                                        <span className="text-sm text-muted-foreground">{proteinConsumed}g / {macros.protein}g</span>
+                                        <span className="text-sm text-muted-foreground">{proteinConsumed}g / {Math.round((tdee * 0.20) / 4)}g</span>
                                     </div>
                                     <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                                        <div style={{ width: `${macros.protein === 0 ? 0 : (proteinConsumed / macros.protein) * 100}%` }} className="h-full rounded-full bg-primary transition-all duration-300 ease-in-out" />
+                                        <div style={{ width: `${Math.round((tdee * 0.20) / 4) === 0 ? 0 : (proteinConsumed / Math.round((tdee * 0.20) / 4)) * 100}%` }} className="h-full rounded-full bg-primary transition-all duration-300 ease-in-out" />
                                     </div>
                                 </div>
                             </div>
@@ -378,10 +390,10 @@ export default function Dashboard() {
                                 <div className="flex-1 pl-2">
                                     <div className="flex items-center justify-between p-2">
                                         <span className="text-sm font-medium">Fat</span>
-                                        <span className="text-sm text-muted-foreground">{fatConsumed}g / {macros.fat}g</span>
+                                        <span className="text-sm text-muted-foreground">{fatConsumed}g / {Math.round((tdee * 0.30) / 9)}g</span>
                                     </div>
                                     <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                                        <div style={{ width: `${macros.fat === 0 ? 0 : (fatConsumed / macros.fat) * 100}%` }} className="h-full rounded-full bg-primary transition-all duration-300 ease-in-out" />
+                                        <div style={{ width: `${Math.round((tdee * 0.30) / 9) === 0 ? 0 : (fatConsumed / Math.round((tdee * 0.30) / 9)) * 100}%` }} className="h-full rounded-full bg-primary transition-all duration-300 ease-in-out" />
                                     </div>
                                 </div>
                             </div>
@@ -390,10 +402,10 @@ export default function Dashboard() {
                                 <div className="flex-1 pl-2">
                                     <div className="flex items-center justify-between p-2">
                                         <span className="text-sm font-medium">Carbs</span>
-                                        <span className="text-sm text-muted-foreground">{carbsConsumed}g / {macros.carbs}g</span>
+                                        <span className="text-sm text-muted-foreground">{carbsConsumed}g / {Math.round((tdee * 0.50) / 4)}g</span>
                                     </div>
                                     <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                                        <div style={{ width: `${macros.carbs === 0 ? 0 : (carbsConsumed / macros.carbs) * 100}%` }} className="h-full rounded-full bg-primary transition-all duration-300 ease-in-out" />
+                                        <div style={{ width: `${Math.round((tdee * 0.50) / 4) === 0 ? 0 : (carbsConsumed / Math.round((tdee * 0.50) / 4)) * 100}%` }} className="h-full rounded-full bg-primary transition-all duration-300 ease-in-out" />
                                     </div>
                                 </div>
                             </div>

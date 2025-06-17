@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\DailyTotal;
+use App\Models\Food;
 
 class FoodController extends Controller
 {
@@ -56,43 +58,63 @@ class FoodController extends Controller
         return inertia('foods/show', ['food' => $food]);
     }
 
+    private function updateDailyTotals($userId, $date)
+    {
+        $date = date('Y-m-d', strtotime($date));
+
+        $totals = Food::where('user_id', $userId)
+            ->whereDate('consumed_at', $date)
+            ->selectRaw('
+                COALESCE(SUM(calories),0) as calories,
+                COALESCE(SUM(protein_g),0) as protein_g,
+                COALESCE(SUM(carbs_g),0) as carbs_g,
+                COALESCE(SUM(fat_g),0) as fat_g
+            ')
+            ->first();
+
+            $dailyTotal = DailyTotal::where('user_id', $userId)
+            ->whereDate('date', $date)
+            ->first();
+
+        if ($dailyTotal) {
+            // Update existing record
+            $dailyTotal->calories = (int) $totals->calories;
+            $dailyTotal->protein_g = (int) $totals->protein_g;
+            $dailyTotal->carbs_g = (int) $totals->carbs_g;
+            $dailyTotal->fat_g = (int) $totals->fat_g;
+            $dailyTotal->save();
+        } else {
+            // Create new record only if there are food items
+            if ($totals->calories > 0 || $totals->protein_g > 0 || $totals->carbs_g > 0 || $totals->fat_g > 0) {
+                DailyTotal::create([
+                    'user_id' => $userId,
+                    'date' => $date,
+                    'calories' => (int) $totals->calories,
+                    'protein_g' => (int) $totals->protein_g,
+                    'carbs_g' => (int) $totals->carbs_g,
+                    'fat_g' => (int) $totals->fat_g,
+                ]);
+            }
+        }
+    }
+
     public function store(Request $request)
     {
-        \Log::info('Food store request data:', $request->all());
-
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'calories' => 'required|numeric|min:0',
             'protein_g' => 'required|numeric|min:0',
             'carbs_g' => 'required|numeric|min:0',
             'fat_g' => 'required|numeric|min:0',
             'consumed_at' => 'required|date',
-            'description' => 'nullable|string',
         ]);
 
-        \Log::info('Validated data:', $validated);
+        $food = $request->user()->foods()->create($request->all());
 
-        try {
-            $food = $request->user()->foods()->create($validated);
-            \Log::info('Food created:', $food->toArray());
+        // Update daily totals after creating the food entry
+        $this->updateDailyTotals($request->user()->id, $request->consumed_at);
 
-            if ($request->wantsJson()) {
-                return response()->json(['success' => true, 'food' => $food]);
-            }
-
-            return redirect()->route('foods.index')->with('success', 'Food item created successfully.');
-        } catch (\Exception $e) {
-            \Log::error('Error creating food:', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            if ($request->wantsJson()) {
-                return response()->json(['success' => false, 'message' => 'Failed to create food item'], 500);
-            }
-
-            return redirect()->back()->with('error', 'Failed to create food item');
-        }
+        return redirect()->route('foods.index');
     }
 
     public function edit(Request $request, $id)
@@ -103,28 +125,37 @@ class FoodController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'calories' => 'required|numeric|min:0',
             'protein_g' => 'required|numeric|min:0',
             'carbs_g' => 'required|numeric|min:0',
             'fat_g' => 'required|numeric|min:0',
             'consumed_at' => 'required|date',
-            'description' => 'nullable|string',
         ]);
 
         $food = $request->user()->foods()->findOrFail($id);
+        $oldDate = $food->consumed_at;
+        $food->update($request->all());
 
-        $food->update($validated);
+        // Update daily totals for both old and new dates
+        $this->updateDailyTotals($request->user()->id, $oldDate);
+        $this->updateDailyTotals($request->user()->id, $request->consumed_at);
 
-        return redirect()->route('foods.index')->with('success', 'Food item updated successfully.');
+        return redirect()->route('foods.index');
     }
 
     public function destroy(Request $request, $id)
     {
         $food = $request->user()->foods()->findOrFail($id);
+        $date = $food->consumed_at;
+        
+        // Delete the food entry
         $food->delete();
 
-        return redirect()->route('foods.index')->with('success', 'Food item deleted successfully.');
+        // Update daily totals after deleting the food entry
+        $this->updateDailyTotals($request->user()->id, $date);
+
+        return redirect()->route('foods.index');
     }
 }

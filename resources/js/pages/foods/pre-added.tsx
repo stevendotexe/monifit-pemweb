@@ -61,7 +61,7 @@ export default function PreAddedFoods({ preAddedFoods }: { preAddedFoods: PreAdd
                 <div className="flex flex-row items-center justify-between">
                     <Heading title="Pre-added Foods" description="Browse and add common foods to your log." />
                     <Link href={route('foods.create')}>
-                        <Button variant="outline">Create Custom Food</Button>
+                        <Button variant="outline" className='cursor-pointer'>Create Custom Food</Button>
                     </Link>
                 </div>
 
@@ -107,6 +107,7 @@ export default function PreAddedFoods({ preAddedFoods }: { preAddedFoods: PreAdd
                                                     variant="outline"
                                                     size="sm"
                                                     onClick={() => handleAddToLog(food)}
+                                                    className='cursor-pointer'
                                                 >
                                                     Add to Log
                                                 </Button>

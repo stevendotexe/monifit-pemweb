@@ -52,7 +52,7 @@ export default function Index({ foodsByDay }: { foodsByDay: FoodDayGroup[] }) {
                 <div className="flex flex-row items-center justify-between">
                     <Heading title="My Food Log" description="A list of all the food you have consumed, grouped by day." />
                     <Link href={route('foods.pre-added')}>
-                        <Button>Add New Food</Button>
+                        <Button className='cursor-pointer'>Add New Food</Button>
                     </Link>
                 </div>
 
@@ -113,7 +113,7 @@ export default function Index({ foodsByDay }: { foodsByDay: FoodDayGroup[] }) {
                                                     <TableCell className="text-right">
                                                         <div className="flex items-center justify-end gap-2">
                                                             <Link href={route('foods.edit', food.id)}>
-                                                                <Button variant="outline" size="icon">
+                                                                <Button className='cursor-pointer' variant="outline" size="icon">
                                                                     <Pencil className="h-4 w-4" />
                                                                 </Button>
                                                             </Link>
@@ -121,6 +121,7 @@ export default function Index({ foodsByDay }: { foodsByDay: FoodDayGroup[] }) {
                                                                 variant="destructive"
                                                                 size="icon"
                                                                 onClick={() => setIsDeleting(food)}
+                                                                className='cursor-pointer'
                                                             >
                                                                 <Trash2 className="h-4 w-4" />
                                                             </Button>

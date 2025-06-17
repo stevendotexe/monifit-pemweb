@@ -45,7 +45,7 @@ export default function EditFood({ food }: { food: Food }) {
     return (
         <AppLayout>
             <Head title={`Edit - ${food.name}`} />
-            <Card>
+            <Card className='bg-sidebar m-4'>
                 <CardHeader>
                     <Heading title="Edit Food Item" description={`You are editing "${food.name}".`} />
                 </CardHeader>

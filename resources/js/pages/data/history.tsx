@@ -57,7 +57,6 @@ type PageProps = {
 };
 
 export default function History({ weightLogs, nutritionData, hydrationData }: PageProps) {
-    // Prepare weight data for chart
     const weightData = {
         labels: weightLogs.map(log => new Date(log.date).toLocaleDateString()),
         datasets: [
@@ -70,7 +69,6 @@ export default function History({ weightLogs, nutritionData, hydrationData }: Pa
         ],
     };
 
-    // Prepare nutrition data for chart
     const nutritionChartData = {
         labels: nutritionData.map(item => new Date(item.date).toLocaleDateString()),
         datasets: [
@@ -101,7 +99,6 @@ export default function History({ weightLogs, nutritionData, hydrationData }: Pa
         ],
     };
 
-    // Prepare hydration data for chart
     const hydrationChartData = {
         labels: hydrationData.map(item => new Date(item.date).toLocaleDateString()),
         datasets: [

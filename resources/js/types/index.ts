@@ -12,4 +12,9 @@ export interface PreAddedFood {
     is_gluten_free: boolean;
     created_at: string;
     updated_at: string;
+}
+
+export interface BreadcrumbItem {
+    title: string;
+    href: string;
 } 
